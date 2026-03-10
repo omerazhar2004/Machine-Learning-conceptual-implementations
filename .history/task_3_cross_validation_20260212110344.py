@@ -21,23 +21,6 @@ def partition_data(training_data: pd.DataFrame, f: int) -> list[pd.DataFrame]:
 
     partition_list = []
     # Compute, compute, compute!
-    if f > len(training_data):
-        f = len(training_data) 
-
-    base_size = len(training_data) // f
-    remainder = len(training_data) % f    
-    start = 0       
-    for i in range(f):
-        current_size = base_size
-        if i < remainder:
-            current_size += 1
-
-        end = start + current_size       
-        partitioned_df = training_data.iloc[start:end]
-        partition_list.append(partitioned_df)
-        start = end
-
-
     return partition_list
 
 
@@ -63,17 +46,6 @@ def arrange_data_for_cv(partition_list: list[pd.DataFrame], f: int) \
         print("Something went really wrong! Why is the number of partitions different from f??")
         return []
     folds = []
-    for i in range(len(partition_list)):
-        testing_data = partition_list[i]
-        training_data1 = partition_list[:i]
-        training_data2 = partition_list[i+1:]
-        training_data_comb = training_data1 + training_data2
-
-        training_data = pd.concat(training_data_comb)
-
-        folds.append((i, training_data, testing_data))
-            
-            
     # Do your thing!
     return folds
 
@@ -97,26 +69,6 @@ def evaluate_results(actual_class_list: list[pd.Series], predicted_class_list: l
                'avg_weighted_precision': 0.0, 'avg_weighted_recall': 0.0,
                'avg_weighted_f_measure': 0.0, 'avg_standard_accuracy': 0.0,
                'avg_balanced_accuracy': 0.0}
-    number_of_folds = len(actual_class_list)
-    for i in range(number_of_folds):
-        metrics = task_2_evaluation.evaluate_classification(actual_class_list[i], predicted_class_list[i], class_values)
-        results['avg_macro_precision'] += metrics['macro_precision']
-        results['avg_macro_recall'] += metrics['macro_recall']
-        results['avg_macro_f_measure'] += metrics['macro_f_measure']
-        results['avg_weighted_precision'] += metrics['weighted_precision']
-        results['avg_weighted_recall'] += metrics['weighted_recall']
-        results['avg_weighted_f_measure'] += metrics['weighted_f_measure']
-        results['avg_standard_accuracy'] += metrics['standard_accuracy']
-        results['avg_balanced_accuracy'] += metrics['balanced_accuracy']
-    results['avg_macro_precision'] = results['avg_macro_precision'] / number_of_folds
-    results['avg_macro_recall'] = results['avg_macro_recall'] / number_of_folds
-    results['avg_macro_f_measure'] = results['avg_macro_f_measure'] / number_of_folds
-    results['avg_weighted_precision'] = results['avg_weighted_precision'] / number_of_folds
-    results['avg_weighted_recall'] = results['avg_weighted_recall'] / number_of_folds
-    results['avg_weighted_f_measure'] = results['avg_weighted_f_measure'] / number_of_folds
-    results['avg_standard_accuracy'] = results['avg_standard_accuracy'] / number_of_folds
-    results['avg_balanced_accuracy'] = results['avg_balanced_accuracy'] / number_of_folds
-
     # Black magic time!
     return results
 

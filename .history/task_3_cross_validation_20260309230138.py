@@ -97,26 +97,6 @@ def evaluate_results(actual_class_list: list[pd.Series], predicted_class_list: l
                'avg_weighted_precision': 0.0, 'avg_weighted_recall': 0.0,
                'avg_weighted_f_measure': 0.0, 'avg_standard_accuracy': 0.0,
                'avg_balanced_accuracy': 0.0}
-    number_of_folds = len(actual_class_list)
-    for i in range(number_of_folds):
-        metrics = task_2_evaluation.evaluate_classification(actual_class_list[i], predicted_class_list[i], class_values)
-        results['avg_macro_precision'] += metrics['macro_precision']
-        results['avg_macro_recall'] += metrics['macro_recall']
-        results['avg_macro_f_measure'] += metrics['macro_f_measure']
-        results['avg_weighted_precision'] += metrics['weighted_precision']
-        results['avg_weighted_recall'] += metrics['weighted_recall']
-        results['avg_weighted_f_measure'] += metrics['weighted_f_measure']
-        results['avg_standard_accuracy'] += metrics['standard_accuracy']
-        results['avg_balanced_accuracy'] += metrics['balanced_accuracy']
-    results['avg_macro_precision'] = results['avg_macro_precision'] / number_of_folds
-    results['avg_macro_recall'] = results['avg_macro_recall'] / number_of_folds
-    results['avg_macro_f_measure'] = results['avg_macro_f_measure'] / number_of_folds
-    results['avg_weighted_precision'] = results['avg_weighted_precision'] / number_of_folds
-    results['avg_weighted_recall'] = results['avg_weighted_recall'] / number_of_folds
-    results['avg_weighted_f_measure'] = results['avg_weighted_f_measure'] / number_of_folds
-    results['avg_standard_accuracy'] = results['avg_standard_accuracy'] / number_of_folds
-    results['avg_balanced_accuracy'] = results['avg_balanced_accuracy'] / number_of_folds
-
     # Black magic time!
     return results
 

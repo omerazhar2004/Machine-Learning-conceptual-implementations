@@ -108,14 +108,7 @@ def evaluate_results(actual_class_list: list[pd.Series], predicted_class_list: l
         results['avg_weighted_f_measure'] += metrics['weighted_f_measure']
         results['avg_standard_accuracy'] += metrics['standard_accuracy']
         results['avg_balanced_accuracy'] += metrics['balanced_accuracy']
-    results['avg_macro_precision'] = results['avg_macro_precision'] / number_of_folds
-    results['avg_macro_recall'] = results['avg_macro_recall'] / number_of_folds
-    results['avg_macro_f_measure'] = results['avg_macro_f_measure'] / number_of_folds
-    results['avg_weighted_precision'] = results['avg_weighted_precision'] / number_of_folds
-    results['avg_weighted_recall'] = results['avg_weighted_recall'] / number_of_folds
-    results['avg_weighted_f_measure'] = results['avg_weighted_f_measure'] / number_of_folds
-    results['avg_standard_accuracy'] = results['avg_standard_accuracy'] / number_of_folds
-    results['avg_balanced_accuracy'] = results['avg_balanced_accuracy'] / number_of_folds
+
 
     # Black magic time!
     return results
