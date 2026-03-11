@@ -154,20 +154,18 @@ def cross_validate(nb: NaiveBayes, training_data: pd.DataFrame, f: int,
     prepared_data = prep_func(partitioned_data, actual_f)
     
     for fold in prepared_data:
-        # Selecting the training data from a fold
         sub_training_data = fold[1]
+      
+       
         nb.train_model(sub_training_data)
-        # Selecting the testing data from a fold
         sub_testing_data = fold[2]
-        #appending the Series to a list
         actual_class_list.append(sub_testing_data[class_column])
         fold_number = fold[0]
         sub_testing_data_predicted = nb.predict(sub_testing_data)
-        #assigning the current fold number to all entries in testing data
         sub_testing_data_predicted["Fold"] = fold_number
         predicted_class_list.append(sub_testing_data_predicted["PredictedClass"])
         output_dataset.append(sub_testing_data_predicted)
-    # joining together the testing data from all folds which now has two new columns(Fold and PredictedClass) into one large data.
+
     output_dataset = pd.concat(output_dataset)  
     evaluated_result = eval_func(actual_class_list, predicted_class_list, class_values)      
 

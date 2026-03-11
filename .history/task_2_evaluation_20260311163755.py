@@ -252,7 +252,6 @@ def compute_standard_accuracy(matrix: pd.DataFrame) -> float:
     total = 0
     N = matrix.sum().sum()
     for i in range(len(matrix)):
-        # We add all entries diagonally(all entries whos predicted class and actual class are the same)
         total += matrix.iloc[i,i]
     if N == 0:
         return 0
@@ -281,6 +280,7 @@ def compute_balanced_accuracy(matrix: pd.DataFrame) -> float:
 def evaluate_classification(actual_class: pd.Series, predicted_class: pd.Series, class_values: list[str],
                             confusion_func=confusion_matrix) \
         -> dict[str, float]:
+    # Have fun with the computations!
     matrix = confusion_func(actual_class, predicted_class, class_values)
     macro_precision = compute_macro_precision(matrix)
     macro_recall = compute_macro_recall(matrix)
