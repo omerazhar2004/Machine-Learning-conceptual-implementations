@@ -147,31 +147,21 @@ def evaluate_results(actual_class_list: list[pd.Series], predicted_class_list: l
 def cross_validate(nb: NaiveBayes, training_data: pd.DataFrame, f: int,
                    partition_func=partition_data, prep_func=arrange_data_for_cv, eval_func=evaluate_results) \
         -> tuple[pd.DataFrame, dict[str, float]]:
-    output_dataset = []
-    actual_class_list = []
-    predicted_class_list= []
-    class_values = nb.class_info[1]
-    class_column = nb.class_info[0]
+    output_dataset = None
     partitioned_data = partition_func(training_data, f)
-    actual_f = len(partition_data)
-    prepared_data = prep_func(partitioned_data, actual_f)
-    
-    for fold in prepared_data:
-        sub_training_data = fold[1]
-      
-       
-        nb.train_model(sub_training_data)
-        sub_testing_data = fold[2]
-        actual_class_list.append(sub_testing_data[class_column])
-        fold_number = fold[0]
+    prepared_data = prep_func(partition_data, f)
+    fold_numbers = []
+    for folds in range(len(prepared_data)):
+        sub_training_data = folds[1]
+        sub_testing_data = folds[2]
+        fold_number = folds[0]
+        fold_numbers.append(fold_number)
         sub_testing_data_predicted = nb.predict(sub_testing_data)
-        sub_testing_data_predicted["Fold"] = fold_number
-        predicted_class_list.append(sub_testing_data_predicted["PredictedClass"])
+        sub_testing_data_predicted["Fold"] = fold_numbers
+
         output_dataset.append(sub_testing_data_predicted)
-
-    output_dataset = pd.concat(output_dataset)  
-    evaluated_result = eval_func(actual_class_list, predicted_class_list, class_values)      
+    output_dataset = pd.concat(output_dataset)        
 
 
 
-    return output_dataset, evaluated_result
+    return output_dataset, {}

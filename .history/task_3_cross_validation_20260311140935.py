@@ -148,30 +148,32 @@ def cross_validate(nb: NaiveBayes, training_data: pd.DataFrame, f: int,
                    partition_func=partition_data, prep_func=arrange_data_for_cv, eval_func=evaluate_results) \
         -> tuple[pd.DataFrame, dict[str, float]]:
     output_dataset = []
-    actual_class_list = []
-    predicted_class_list= []
+    actual_class_list_1 = []
+    predicted_class_list_1= []
     class_values = nb.class_info[1]
     class_column = nb.class_info[0]
     partitioned_data = partition_func(training_data, f)
-    actual_f = len(partition_data)
-    prepared_data = prep_func(partitioned_data, actual_f)
+    prepared_data = prep_func(partitioned_data, f)
     
     for fold in prepared_data:
         sub_training_data = fold[1]
-      
-       
+        actual_class_list_1.append(sub_testing_data[class_column])
         nb.train_model(sub_training_data)
         sub_testing_data = fold[2]
-        actual_class_list.append(sub_testing_data[class_column])
         fold_number = fold[0]
         sub_testing_data_predicted = nb.predict(sub_testing_data)
         sub_testing_data_predicted["Fold"] = fold_number
-        predicted_class_list.append(sub_testing_data_predicted["PredictedClass"])
+        predicted_class_list_1.append(sub_testing_data_predicted['PredictedClass'])
         output_dataset.append(sub_testing_data_predicted)
-
+    actual_class_list = pd.Series(
+    actual_class_list_1,
+    name='Class')
+    predicted_class_list = pd.Series(
+    predicted_class_list_1,
+    name='PredictedClass')
     output_dataset = pd.concat(output_dataset)  
-    evaluated_result = eval_func(actual_class_list, predicted_class_list, class_values)      
+    evaluated_result = eval_func(actual_class_list[i], predicted_class_list[i], class_values)      
 
 
 
-    return output_dataset, evaluated_result
+    return output_dataset, {}, evaluated_result
